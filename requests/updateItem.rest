@@ -1,0 +1,24 @@
+PATCH http://localhost:3000/api/inventory/update/1
+Content-Type: application/json
+
+{
+  "name": "updated name"
+}
+
+###
+PATCH http://localhost:3000/api/inventory/update/1
+Content-Type: application/json
+
+{
+  "qty": 9000
+}
+
+###
+PATCH http://localhost:3000/api/inventory/update/1
+Content-Type: application/json
+
+{
+  "shortdesc": "updated description",
+  "longdesc": "a mock data throwaway that can be deleted at will",
+  "city": "Nowheresville"
+}
