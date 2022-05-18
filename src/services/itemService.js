@@ -1,10 +1,10 @@
 import db from "../db/index.js";
-import { TABLE_NAME, ALL_COLUMNS, COLUMNS_NOID } from "../constants.js";
+import { INV_TABLE_NAME, INV_ALL_COLUMNS, INV_COLUMNS_NOID } from "../constants.js";
 
 export async function updateItem(reqBody){
 	const {id} = reqBody;
 	//retrieve current item 
-	const originalEntry = await db.query(`SELECT * FROM ${TABLE_NAME} WHERE id=$1;`, [id]);
+	const originalEntry = await db.query(`SELECT * FROM ${INV_TABLE_NAME} WHERE id=$1;`, [id]);
 	const originalRow = originalEntry.rows[0];
 
 	let columns = [];
@@ -22,10 +22,10 @@ export async function updateItem(reqBody){
 
 	//format SQL query
 	const queryText = `
-  UPDATE ${TABLE_NAME}
+  UPDATE ${INV_TABLE_NAME}
   SET ${columnNames} 
   WHERE id=${id}
-  RETURNING ${ALL_COLUMNS}
+  RETURNING ${INV_ALL_COLUMNS}
   `;
 
 	//store and return updated row
@@ -34,23 +34,23 @@ export async function updateItem(reqBody){
 }
 
 export async function deleteItem(id){
-	const response = await db.query(`DELETE FROM ${TABLE_NAME} WHERE id=$1 RETURNING ${ALL_COLUMNS}`, [id]);
+	const response = await db.query(`DELETE FROM ${INV_TABLE_NAME} WHERE id=$1 RETURNING ${INV_ALL_COLUMNS}`, [id]);
 	return response.rows[0];
 }
 
 export async function getAllItems(){
-	const {rows} = await db.query(`SELECT ${ALL_COLUMNS} FROM ${TABLE_NAME}`);
+	const {rows} = await db.query(`SELECT ${INV_ALL_COLUMNS} FROM ${INV_TABLE_NAME}`);
 	return rows;
 }
 
 export async function getItem(id){
-	const {rows} = await db.query(`SELECT ${ALL_COLUMNS} FROM ${TABLE_NAME} WHERE id=$1`, [id]);
+	const {rows} = await db.query(`SELECT ${INV_ALL_COLUMNS} FROM ${INV_TABLE_NAME} WHERE id=$1`, [id]);
 	return rows[0];
 }
 
 export async function createItem(reqBody){
 	const  {qty, name, shortdesc, longdesc, city} = reqBody;
-	const text = `INSERT INTO ${TABLE_NAME} (${COLUMNS_NOID}) VALUES($1, $2, $3, $4, $5) RETURNING ${ALL_COLUMNS}`;
+	const text = `INSERT INTO ${INV_TABLE_NAME} (${INV_COLUMNS_NOID}) VALUES($1, $2, $3, $4, $5) RETURNING ${INV_ALL_COLUMNS}`;
 	const values = [qty, name, shortdesc, longdesc, city];
 	const {rows} = await db.query(text, values);
 	return rows;

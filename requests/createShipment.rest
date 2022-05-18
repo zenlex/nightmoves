@@ -1,0 +1,8 @@
+POST http://localhost:3000/api/inventory/ship
+Content-Type: application/json
+
+{
+  "destination": "never never land",
+  "custname": "peter pan",
+  "items": {"7": 11, "11": 7}
+}

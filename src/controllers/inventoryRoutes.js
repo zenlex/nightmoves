@@ -1,5 +1,6 @@
 import Router from "express-promise-router";
 import itemService from '../services/itemService.js';
+import shipService from "../services/shipService.js";
 
 const router = new Router();
 router.get('/', async (req, res) => {
@@ -34,16 +35,23 @@ router.post('/update', async (req, res) => {
 	res.redirect('/');
 });
 
+//API Delete Item
 router.delete('/delete/:id', async (req, res) => {
 	const {id} = req.params;
 	const deletedRow = await itemService.deleteItem(id);
 	res.json(deletedRow);
 });
 
+//FORM Delete Item
 router.post('/delete', async (req, res) => {
 	const {id} = req.body;
 	await itemService.deleteItem(id);
 	res.redirect('/');
+});
+
+router.post('/ship', async(req,res) => {
+	const newShipment = await shipService.createShipment(req.body);
+	res.json(newShipment);
 });
 
 export default router;
