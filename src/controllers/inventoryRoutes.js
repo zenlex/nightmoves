@@ -3,6 +3,7 @@ import process from 'node:process';
 import Router from "express-promise-router";
 import db from "../db/index.js";
 import utils from '../utils.js';
+import { sql } from 'slonik';
 
 const baseUrl = '/api/inventory';
 const TABLE_NAME = 'inventory';
@@ -10,15 +11,16 @@ const ALL_COLUMNS = `id, qty, name, shortdesc, longdesc, city`;
 const COLUMNS_NOID = `qty, name, shortdesc, longdesc, city`;
 
 const router = new Router();
-
+// sql`SELECT ${ALL_COLUMNS} FROM ${TABLE_NAME}`
 router.get('/', async (req, res) => {
-	const {rows} = await db.query(`SELECT ${ALL_COLUMNS} FROM ${TABLE_NAME};`);
+	const rows = await db.query(sql`SELECT * FROM inventory`);
+	console.log('rows from db', rows);
 	res.json(rows);
 });
 
 router.post('/additem', async (req, res) => {
 	const  {qty, name, shortdesc, longdesc, city} = req.body;
-	const text = `INSERT INTO ${TABLE_NAME} (${COLUMNS_NOID}) VALUES($1, $2, $3, $4, $5) RETURNING ${ALL_COLUMNS};`;
+	const text = sql`INSERT INTO ${TABLE_NAME} (${COLUMNS_NOID}) VALUES($1, $2, $3, $4, $5) RETURNING ${ALL_COLUMNS}`;
 	const values = [qty, name, shortdesc, longdesc, city];
 	const {rows} = await db.query(text, values);
 	res.json(rows);
