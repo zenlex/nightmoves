@@ -15,4 +15,11 @@ export async function createShipment({destination, custname, items}){
 	return rows[0];
 }
 
-export default {createShipment};
+export async function getAllShipments(){
+	const {rows} = await db.query(`
+    SELECT ${SHIP_ALL_COLUMNS} FROM ${SHIP_TABLE_NAME}
+  `);
+	return rows;
+}
+
+export default {createShipment, getAllShipments};

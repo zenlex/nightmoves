@@ -81,43 +81,86 @@
     <p><i>API USAGE: <br />GET http://[host:port]/api/inventory/ - returns all items <br /> GET
         http://[host:port]/api/inventory/:id
         - returns single item with matching id</i></p>
-    <section id="current-inventory-container">
+    <table>
+      <thead>
+        <th>id</th>
+        <th>qty</th>
+        <th>name</th>
+        <th>short desc</th>
+        <th>long desc</th>
+        <th>city</th>
+      </thead>
+      <tbody id="tabledata">
+      </tbody>
+    </table>
+    <script>
+      const inventoryURL = 'http://localhost:3000/api/inventory/'
+      const fetchData = async (url) => {
+        const response = await fetch(url)
+        const data = await response.json();
+        data.sort(({ id: a }, { id: b }) => a - b)
+        const table = document.getElementById('tabledata')
+        data.forEach(row => {
+          let rowHTML = '<tr>'
+          rowHTML += '<td>' + row.id + '</td>'
+          rowHTML += '<td>' + row.qty + '</td>'
+          rowHTML += '<td>' + row.name + '</td>'
+          rowHTML += '<td>' + row.shortdesc + '</td>'
+          rowHTML += '<td>' + row.longdesc + '</td>'
+          rowHTML += '<td>' + row.city + '</td>'
+          rowHTML += '</tr>'
+          table.innerHTML += rowHTML;
+        })
+      }
+      fetchData(inventoryURL)
+    </script>
+  </section>
+  <section id="create-shipment">
+    <h2>Create New Shipment</h2>
+    <p><i>API USAGE: <br />POST http://[host:port]/api/inventory/ship <br />
+        Fields: destination:string, custname:string, items:json {[itemid:string]:[qty:int]}
+      </i></p>
+    <form action="/api/shipments/ship" method="POST">
+      <input type="text" name="destination" placeholder="destination">
+      <input type="text" name="custname" placeholder="Customer Name">
+      <input type="hidden" name="shipform">
+      <h3>Item:Qty to Ship</h3>
+      <input type="number" name="item1id" placeholder="id">:
+      <input type="number" name="item1qty" placeholder="qty">
+      <label for="item1id">Item:</label>
+      <button type="submit">Ship It!</button>
+    </form>
+    <section id="current-shipments">
+      <h2>Scheduled Shipments</h2>
       <table>
         <thead>
           <th>id</th>
-          <th>qty</th>
-          <th>name</th>
-          <th>short desc</th>
-          <th>long desc</th>
-          <th>city</th>
+          <th>destination</th>
+          <th>customer name</th>
+          <th>items</th>
         </thead>
-        <tbody id="tabledata">
+        <tbody id="shiptabledata">
         </tbody>
       </table>
       <script>
-        const apiURL = 'http://localhost:3000/api/inventory/'
-        const fetchData = async (url) => {
+        const shipmentsURL = 'http://localhost:3000/api/shipments'
+        const fetchShipmentData = async (url) => {
           const response = await fetch(url)
           const data = await response.json();
           data.sort(({ id: a }, { id: b }) => a - b)
-          const table = document.getElementById('tabledata')
+          const table = document.getElementById('shiptabledata')
           data.forEach(row => {
             let rowHTML = '<tr>'
             rowHTML += '<td>' + row.id + '</td>'
-            rowHTML += '<td>' + row.qty + '</td>'
-            rowHTML += '<td>' + row.name + '</td>'
-            rowHTML += '<td>' + row.shortdesc + '</td>'
-            rowHTML += '<td>' + row.longdesc + '</td>'
-            rowHTML += '<td>' + row.city + '</td>'
+            rowHTML += '<td>' + row.destination + '</td>'
+            rowHTML += '<td>' + row.custname + '</td>'
+            rowHTML += '<td>' + JSON.stringify(row.items, null, 2) + '</td>'
             rowHTML += '</tr>'
             table.innerHTML += rowHTML;
           })
         }
-        fetchData(apiURL)
+        fetchShipmentData(shipmentsURL)
       </script>
-    </section>
-
-  </section>
 </body>
 
 </html>
