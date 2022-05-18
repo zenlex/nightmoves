@@ -13,51 +13,56 @@ router.get('/', async (req, res) => {
 	res.json(rows); 
 });
 
+router.get('/:id', async (req, res) => {
+	const {id} = req.params;
+	const {rows} = await db.query(`SELECT ${ALL_COLUMNS} FROM ${TABLE_NAME} WHERE id=$1`, [id]);
+	res.json(rows); 
+});
+
 router.post('/additem', async (req, res) => {
 	const  {qty, name, shortdesc, longdesc, city} = req.body;
 	const text = `INSERT INTO ${TABLE_NAME} (${COLUMNS_NOID}) VALUES($1, $2, $3, $4, $5) RETURNING ${ALL_COLUMNS}`;
 	const values = [qty, name, shortdesc, longdesc, city];
 	const {rows} = await db.query(text, values);
-	res.json(rows);
+	res.json(rows[0]);
 });
 
 router.patch('/update/:id', async (req, res) => {
 	const {id} = req.params;
-	const originalEntry = await db.query(`SELECT * FROM ${TABLE_NAME} WHERE id=${id};`);
+	//retrieve current item 
+	const originalEntry = await db.query(`SELECT * FROM ${TABLE_NAME} WHERE id=$1;`, [id]);
 	const originalRow = originalEntry.rows[0];
-	console.log('originalRow', originalRow);
-	//TODO: build correct row taking either original or patch values as appropriate, then run update query
-	const updatedRow = {...originalRow};
+
+	let columns = [];
+	let values = [];
 	for(const key of Object.keys(req.body)){
-		// eslint-disable-next-line no-undef
-		if(key in updatedRow){
-			updatedRow[key] = req.body[key];
+		if(key in originalRow){
+			columns.push(key);
+			values.push(req.body[key]);
 		}
 	}
-	console.log('updatedRow: ', updatedRow);
-	let setValues = [];
-	for(const [key, val] of Object.entries(updatedRow)){
-		setValues.push(`${key}='${val}'`);
-	}
-	setValues = setValues.join(',');
-	console.log(setValues);
-	const text = `
+	//map column names to sql variables
+	const columnNames = columns.map((colName, i) =>
+		`${colName}=$${i + 1}`
+	).join(', ');
+
+	//format SQL query
+	const queryText = `
   UPDATE ${TABLE_NAME}
-  SET ${setValues} 
+  SET ${columnNames} 
   WHERE id=${id}
   RETURNING ${ALL_COLUMNS}
   `;
 
-	const {rows} = await db.query(text);
+	//store and return updated row
+	const {rows} = await db.query(queryText, values);
 	res.json(rows[0]);
 });
 
 router.delete('/delete/:id', async (req, res) => {
 	const {id} = req.params;
-	console.log('delete item @ id', id);
+	const response = await db.query(`DELETE FROM ${TABLE_NAME} WHERE id=$1 RETURNING ${ALL_COLUMNS}`, [id]);
+	res.json(response.rows[0]);
 });
-
-
-
 
 export default router;

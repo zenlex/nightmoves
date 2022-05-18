@@ -20,5 +20,5 @@ Content-Type: application/json
 {
   "shortdesc": "updated description",
   "longdesc": "a mock data throwaway that can be deleted at will",
-  "city": "Nowheresville"
+  "city": "Tulsa"
 }

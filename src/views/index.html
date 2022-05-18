@@ -5,11 +5,91 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>zenlex Express Boilerplate</title>
+  <title>Night Moves Logistical Services</title>
 </head>
 
 <body>
+  <h1>Night Moves Inventory System</h1>
+  <section id="create-item">
+    <h2>Create New Item in Inventory</h2>
+    <form>
+      <input type="text" name="name" placeholder="item name">
+      <input type="number" name="qty" placeholder="qty">
+      <input type="text" name="shortdesc" placeholder="short description">
+      <input type="text" name="longdesc" placeholder="long description">
+      <select name="city">
+        <option value="Tulsa">Tulsa, OK</option>
+        <option value="Chicago">Chicago, IL</option>
+        <option value="Los Angeles">Los Angeles, CA</option>
+        <option value="Kalamazo">Kalamazoo, MI</option>
+        <option value="Greenville">Greenville, NC</option>
+      </select>
+      <button type="submit">Create Item</button>
+    </form>
+  </section>
+  <section id="update-item">
+    <h2>Update an Item</h2>
+    <form>
+      <input type="number" name="id" placeholder="item id">
+      <input type="text" name="name" placeholder="item name">
+      <input type="number" name="qty" placeholder="qty">
+      <input type="text" name="shortdesc" placeholder="short description">
+      <input type="text" name="longdesc" placeholder="long description">
+      <select name="city">
+        <option value="Tulsa">Tulsa, OK</option>
+        <option value="Chicago">Chicago, IL</option>
+        <option value="Los Angeles">Los Angeles, CA</option>
+        <option value="Kalamazo">Kalamazoo, MI</option>
+        <option value="Greenville">Greenville, NC</option>
+      </select>
+      <button type="submit">Create Item</button>
+    </form>
+  </section>
+  <section id="delete-item">
+    <h2>Delete Item</h2>
+    <form>
+      <input type="number" placeholder="item id" name="id">
+      <button type="submit">Delete Item</button>
+    </form>
+  </section>
+  <section id="current-inventory">
+    <h2>Current Inventory</h2>
+    <section id="current-inventory-container">
+      <table>
+        <thead>
+          <th>id</th>
+          <th>qty</th>
+          <th>name</th>
+          <th>short desc</th>
+          <th>long desc</th>
+          <th>city</th>
+        </thead>
+        <tbody id="tabledata">
+        </tbody>
+      </table>
+      <script>
+        const apiURL = 'http://localhost:3000/api/inventory/'
+        const fetchData = async (url) => {
+          const response = await fetch(url)
+          const data = await response.json();
+          const table = document.getElementById('tabledata')
+          data.forEach(row => {
+            let rowHTML = '<tr>'
+            rowHTML += '<td>' + row.id + '</td>'
+            rowHTML += '<td>' + row.qty + '</td>'
+            rowHTML += '<td>' + row.name + '</td>'
+            rowHTML += '<td>' + row.shortdesc + '</td>'
+            rowHTML += '<td>' + row.longdesc + '</td>'
+            rowHTML += '<td>' + row.city + '</td>'
+            rowHTML += '</tr>'
+            table.innerHTML += rowHTML;
+          })
+        }
+        fetchData(apiURL)
+      </script>
+    </section>
 
+  </section>
 </body>
 
 </html>
