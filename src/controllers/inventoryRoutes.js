@@ -14,7 +14,6 @@ const router = new Router();
 // sql`SELECT ${ALL_COLUMNS} FROM ${TABLE_NAME}`
 router.get('/', async (req, res) => {
 	const rows = await db.query(sql`SELECT * FROM inventory`);
-	console.log('rows from db', rows);
 	res.json(rows);
 });
 

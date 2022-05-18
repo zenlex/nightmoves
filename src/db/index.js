@@ -1,5 +1,4 @@
-// import pg from 'pg';
-import { createPool} from 'slonik';
+import { createPool } from 'slonik';
 import dotenv from 'dotenv';
 import process from 'node:process';
 dotenv.config();
