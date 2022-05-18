@@ -1,13 +1,11 @@
-import pg from 'pg';
+import { createPool } from 'slonik';
 import dotenv from 'dotenv';
 import process from 'node:process';
 dotenv.config();
 
-const { Pool } = pg;
-
 const connectionString = process.env.PG_CONNECTION_URL;
 
-const pool = new Pool({connectionString});
+const pool = createPool(connectionString);
 // INITIALIZATION TEST
 // (async () =>  {
 // 	const client = await pool.connect();
