@@ -158,42 +158,13 @@
         const cancelShipmentBtn = document.getElementById('clear-shipment-btn')
         const shipmentForm = document.getElementById('add-shipment-form');
         const displayData = document.getElementById('current-shipment-items')
-        let newShipment = { items: {} };
-        addItemBtn.onclick = (e) => {
-          e.preventDefault()
-          const itemId = document.getElementById('ship-item-id').value
-          const itemQty = document.getElementById('ship-item-qty').value
-          newShipment.items[itemId] = (newShipment[itemId] || 0) + parseInt(itemQty);
-          displayData.innerHTML += `<tr><td>${itemId}</td><td>${itemQty}</td></tr>`
-        }
-        cancelShipmentBtn.onclick = (e) => {
-          e.preventDefault()
-          newShipment = { items: {} }
-          displayData.innerHTML = ''
-        }
-        shipmentForm.onsubmit = (e) => {
-          e.preventDefault();
-          const destination = document.getElementById('shipment-destination').value
-          const custname = document.getElementById('customer-name').value
-          newShipment = { ...newShipment, destination, custname }
-          console.log({ newShipment })
-          fetch('/api/shipments/ship', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(newShipment)
-          })
-          newShipment = undefined;
-          displayData.innerHTML = ''
-        }
-
         const shipmentsURL = 'http://localhost:3000/api/shipments'
         const fetchShipmentData = async (url) => {
           const response = await fetch(url)
           const data = await response.json();
           data.sort(({ id: a }, { id: b }) => a - b)
           const table = document.getElementById('shiptabledata')
+          table.innerHTML = ''
           data.forEach(row => {
             let rowHTML = '<tr>'
             rowHTML += '<td>' + row.id + '</td>'
@@ -206,7 +177,51 @@
           })
         }
         fetchShipmentData(shipmentsURL)
+
+        let newShipment = { items: {} };
+
+        addItemBtn.onclick = (e) => {
+          e.preventDefault()
+          const itemId = document.getElementById('ship-item-id').value
+          const itemQty = document.getElementById('ship-item-qty').value
+          newShipment.items[itemId] = (newShipment[itemId] || 0) + parseInt(itemQty);
+          displayData.innerHTML += `<tr><td>${itemId}</td><td>${itemQty}</td></tr>`
+        }
+
+        cancelShipmentBtn.onclick = (e) => {
+          e.preventDefault()
+          newShipment = { items: {} }
+          displayData.innerHTML = ''
+        }
+
+        shipmentForm.onsubmit = (e) => {
+          e.preventDefault();
+          const destination = document.getElementById('shipment-destination').value
+          const custname = document.getElementById('customer-name').value
+          newShipment = { ...newShipment, destination, custname, shipform: true }
+          fetch('/api/shipments/ship', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newShipment)
+          }).then(() => {
+            fetchShipmentData(shipmentsURL)
+          })
+          newShipment = undefined;
+          displayData.innerHTML = ''
+        }
+
       </script>
+      <section id="delete-shipment">
+        <h2>Cancel Shipment</h2>
+        <form action="/api/shipments/delete" method="POST">
+          <input type="number" placeholder="shipment id" name="id">
+          <input type="hidden" name="deleteform" value="true">
+          <button type="submit">Delete Shipment</button>
+        </form>
+        <p><i>API USAGE: DELETE http://[host:port]/api/shipments/delete/:id</i></p>
+      </section>
 </body>
 
 </html>

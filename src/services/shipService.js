@@ -26,4 +26,25 @@ export async function getAllShipments(){
 	return rows;
 }
 
-export default {createShipment, getAllShipments};
+export async function getShipment(id){
+	const {rows} = await db.query(`
+  SELECT ${SHIP_ALL_COLUMNS} FROM ${SHIP_TABLE_NAME} WHERE id=$1
+  `, [id]);
+	return rows[0];
+}
+
+export async function deleteShipment(id){
+	const shipment = await getShipment(id);
+	for(const idstring in shipment.items){
+		const itemId = parseInt(idstring);
+		const stock = await itemService.getItem(itemId);
+		const {qty: currQty} = stock;
+		const newQty = currQty + shipment.items[itemId];
+		await itemService.updateItem({id:itemId, qty:newQty});
+	}
+	const qtext = `DELETE FROM ${SHIP_TABLE_NAME} WHERE id=$1 RETURNING ${SHIP_ALL_COLUMNS}`; 
+	const {rows} = await db.query(qtext, [id]);
+	return rows[0];
+}
+
+export default {createShipment, getAllShipments, deleteShipment, getShipment};
