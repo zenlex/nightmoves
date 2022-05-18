@@ -11,7 +11,7 @@ POST http://localhost:3000/api/inventory/additem
 Content-Type: application/json
 
 {
-  "name": "test widget",
+  "name": "new old test widget",
   "qty": 42,
   "shortdesc": "a widget for testing db",
   "longdesc": "a mock data throwaway that can be deleted at will",
