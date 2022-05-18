@@ -6,13 +6,28 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Night Moves Logistical Services</title>
+  <style>
+    table * {
+      padding: 0.5rem 1rem;
+    }
+
+    tr:nth-child(2n) {
+      background-color: lightgray;
+    }
+
+    th {
+      text-transform: uppercase;
+      font-weight: bold;
+      border-bottom: 2px solid darkgray;
+    }
+  </style>
 </head>
 
 <body>
   <h1>Night Moves Inventory System</h1>
   <section id="create-item">
     <h2>Create New Item in Inventory</h2>
-    <form>
+    <form action="/api/inventory/create" method="POST">
       <input type="text" name="name" placeholder="item name">
       <input type="number" name="qty" placeholder="qty">
       <input type="text" name="shortdesc" placeholder="short description">
@@ -29,7 +44,7 @@
   </section>
   <section id="update-item">
     <h2>Update an Item</h2>
-    <form>
+    <form action="/api/inventory/update" , method="POST">
       <input type="number" name="id" placeholder="item id">
       <input type="text" name="name" placeholder="item name">
       <input type="number" name="qty" placeholder="qty">
@@ -42,12 +57,12 @@
         <option value="Kalamazo">Kalamazoo, MI</option>
         <option value="Greenville">Greenville, NC</option>
       </select>
-      <button type="submit">Create Item</button>
+      <button type="submit">Update Item</button>
     </form>
   </section>
   <section id="delete-item">
     <h2>Delete Item</h2>
-    <form>
+    <form action="/api/inventory/delete" method="POST">
       <input type="number" placeholder="item id" name="id">
       <button type="submit">Delete Item</button>
     </form>
@@ -72,6 +87,7 @@
         const fetchData = async (url) => {
           const response = await fetch(url)
           const data = await response.json();
+          data.sort(({ id: a }, { id: b }) => a - b)
           const table = document.getElementById('tabledata')
           data.forEach(row => {
             let rowHTML = '<tr>'

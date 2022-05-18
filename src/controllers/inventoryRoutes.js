@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-import process from 'node:process';
 import Router from "express-promise-router";
 import db from "../db/index.js";
 
@@ -19,16 +18,16 @@ router.get('/:id', async (req, res) => {
 	res.json(rows); 
 });
 
-router.post('/additem', async (req, res) => {
+router.post('/create', async (req, res) => {
 	const  {qty, name, shortdesc, longdesc, city} = req.body;
 	const text = `INSERT INTO ${TABLE_NAME} (${COLUMNS_NOID}) VALUES($1, $2, $3, $4, $5) RETURNING ${ALL_COLUMNS}`;
 	const values = [qty, name, shortdesc, longdesc, city];
 	const {rows} = await db.query(text, values);
-	res.json(rows[0]);
+	res.redirect('/');
 });
 
-router.patch('/update/:id', async (req, res) => {
-	const {id} = req.params;
+router.post('/update', async (req, res) => {
+	const {id} = req.body;
 	//retrieve current item 
 	const originalEntry = await db.query(`SELECT * FROM ${TABLE_NAME} WHERE id=$1;`, [id]);
 	const originalRow = originalEntry.rows[0];
@@ -56,13 +55,13 @@ router.patch('/update/:id', async (req, res) => {
 
 	//store and return updated row
 	const {rows} = await db.query(queryText, values);
-	res.json(rows[0]);
+	res.redirect('/');
 });
 
-router.delete('/delete/:id', async (req, res) => {
-	const {id} = req.params;
+router.post('/delete', async (req, res) => {
+	const {id} = req.body;
 	const response = await db.query(`DELETE FROM ${TABLE_NAME} WHERE id=$1 RETURNING ${ALL_COLUMNS}`, [id]);
-	res.json(response.rows[0]);
+	res.redirect('/');
 });
 
 export default router;
