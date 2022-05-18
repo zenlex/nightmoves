@@ -1,10 +1,21 @@
 import Router from "express-promise-router";
 import itemService from '../services/itemService.js';
+import getWeather from "../services/weatherService.js";
 
 const router = new Router();
 router.get('/', async (req, res, next) => {
 	try{
 		const rows = await itemService.getAllItems();
+		let weatherMemo = {};
+		for(const row of rows){
+			if(row.city in weatherMemo){
+				row.weather = weatherMemo[row.city];
+			}else{
+				const weather = await getWeather(row.city);
+				weatherMemo[row.city] = weather;
+				row.weather = weather;
+			}
+		}
 		res.json(rows); 
 	}catch(e){
 		next(e);
