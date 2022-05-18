@@ -7,10 +7,11 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:3000/api/inventory/update/1
+PATCH http://localhost:3000/api/inventory/update/
 Content-Type: application/json
 
 {
+  "id": 14,
   "qty": 9000
 }
 

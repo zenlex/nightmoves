@@ -42,6 +42,9 @@
       <input type="hidden" name="createform" value="true">
       <button type="submit">Create Item</button>
     </form>
+    <p><i>API USAGE: POST http://[host:port]/api/inventory/create <br />
+        Fields: 'name:string', 'qty:int', 'shortdesc:string', 'longdesc:string', 'city:string'
+      </i></p>
   </section>
   <section id="update-item">
     <h2>Update an Item</h2>
@@ -60,6 +63,10 @@
       </select>
       <button type="submit">Update Item</button>
     </form>
+    <p><i>API USAGE: PATCH http://[host:port]/api/inventory/update <br />
+        Fields: 'id:int(required)', 'name:string', 'qty:int', 'shortdesc:string', 'longdesc:string',
+        'city:string'
+      </i></p>
   </section>
   <section id="delete-item">
     <h2>Delete Item</h2>
@@ -67,9 +74,13 @@
       <input type="number" placeholder="item id" name="id">
       <button type="submit">Delete Item</button>
     </form>
+    <p><i>API USAGE: DELETE http://[host:port]/api/inventory/delete/:id</i></p>
   </section>
   <section id="current-inventory">
     <h2>Current Inventory</h2>
+    <p><i>API USAGE: <br />GET http://[host:port]/api/inventory/ - returns all items <br /> GET
+        http://[host:port]/api/inventory/:id
+        - returns single item with matching id</i></p>
     <section id="current-inventory-container">
       <table>
         <thead>
