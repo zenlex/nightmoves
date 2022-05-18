@@ -27,19 +27,29 @@ router.patch('/update/:id', async (req, res) => {
 	const originalRow = originalEntry.rows[0];
 	console.log('originalRow', originalRow);
 	//TODO: build correct row taking either original or patch values as appropriate, then run update query
-	const updatedRow = {};
+	const updatedRow = {...originalRow};
 	for(const key of Object.keys(req.body)){
 		// eslint-disable-next-line no-undef
-		if(validFields.includes(key)){
+		if(key in updatedRow){
 			updatedRow[key] = req.body[key];
 		}
 	}
+	console.log('updatedRow: ', updatedRow);
+	let setValues = [];
+	for(const [key, val] of Object.entries(updatedRow)){
+		setValues.push(`${key}='${val}'`);
+	}
+	setValues = setValues.join(',');
+	console.log(setValues);
 	const text = `
   UPDATE ${TABLE_NAME}
-  SET 
+  SET ${setValues} 
+  WHERE id=${id}
+  RETURNING ${ALL_COLUMNS}
   `;
-	console.log('update item @ id', id, req.body);
 
+	const {rows} = await db.query(text);
+	res.json(rows[0]);
 });
 
 router.delete('/delete/:id', async (req, res) => {
