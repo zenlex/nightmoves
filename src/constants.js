@@ -5,5 +5,5 @@ export const INV_COLUMNS_NOID = ['qty', 'name', 'shortdesc', 'longdesc', 'city']
 
 //SHIPMENT TABLE
 export const SHIP_TABLE_NAME = 'shipments';
-export const SHIP_ALL_COLUMNS = ['id', 'destination', 'custname', 'items'].join(',');
-export const SHIP_COLUMNS_NOID = ['destination', 'custname', 'items'].join(',');
+export const SHIP_ALL_COLUMNS = ['id', 'destination', 'custname', 'items', 'created'].join(',');
+export const SHIP_COLUMNS_NOID = ['destination', 'custname', 'items', 'created'].join(',');

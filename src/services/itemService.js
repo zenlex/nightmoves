@@ -6,11 +6,10 @@ export async function updateItem(reqBody){
 	//retrieve current item 
 	const originalEntry = await db.query(`SELECT * FROM ${INV_TABLE_NAME} WHERE id=$1;`, [id]);
 	const originalRow = originalEntry.rows[0];
-
 	let columns = [];
 	let values = [];
 	for(const key of Object.keys(reqBody)){
-		if(key in originalRow && reqBody[key]){
+		if(key !== 'id' && key in originalRow && reqBody[key] !== ''){
 			columns.push(key);
 			values.push(reqBody[key]);
 		}
@@ -27,7 +26,6 @@ export async function updateItem(reqBody){
   WHERE id=${id}
   RETURNING ${INV_ALL_COLUMNS}
   `;
-
 	//store and return updated row
 	const {rows} = await db.query(queryText, values);
 	return rows[0];

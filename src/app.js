@@ -20,4 +20,10 @@ app.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
+app.use((err, req, res) => {
+	console.log(`Express error handler caught error: ${err.message}`);
+	res.status(500);
+	res.json({error: err.message});
+});
+
 export default app;

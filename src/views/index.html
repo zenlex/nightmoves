@@ -117,19 +117,29 @@
   </section>
   <section id="create-shipment">
     <h2>Create New Shipment</h2>
-    <p><i>API USAGE: <br />POST http://[host:port]/api/inventory/ship <br />
+    <p><i>API USAGE: <br />POST http://[host:port]/api/shipments/ship <br />
         Fields: destination:string, custname:string, items:json {[itemid:string]:[qty:int]}
       </i></p>
-    <form action="/api/shipments/ship" method="POST">
-      <input type="text" name="destination" placeholder="destination">
-      <input type="text" name="custname" placeholder="Customer Name">
+    <form id='add-shipment-form'>
+      <input type="text" name="destination" placeholder="destination" id='shipment-destination'>
+      <input type="text" name="custname" placeholder="Customer Name" id='customer-name'>
       <input type="hidden" name="shipform">
       <h3>Item:Qty to Ship</h3>
-      <input type="number" name="item1id" placeholder="id">:
-      <input type="number" name="item1qty" placeholder="qty">
-      <label for="item1id">Item:</label>
-      <button type="submit">Ship It!</button>
+      <input type="number" name="itemid" id="ship-item-id" placeholder="id">:
+      <input type="number" name="itemqty" id="ship-item-qty" placeholder="qty">
+      <label for="itemid">Item:</label>
+      <label for="itemqty">Qty:</label>
+      <button type="button" id="add-to-shipment-btn">Add Item</button>
     </form>
+    <table>
+      <thead>
+        <th>Item ID</th>
+        <th>Qty</th>
+      </thead>
+      <tbody id="current-shipment-items"></tbody>
+    </table>
+    <button type="submit" form="add-shipment-form">Complete Shipment</button>
+    <button type="button" id="clear-shipment-btn">Clear Shipment</button>
     <section id="current-shipments">
       <h2>Scheduled Shipments</h2>
       <table>
@@ -138,11 +148,46 @@
           <th>destination</th>
           <th>customer name</th>
           <th>items</th>
+          <th>created</th>
         </thead>
         <tbody id="shiptabledata">
         </tbody>
       </table>
       <script>
+        const addItemBtn = document.getElementById('add-to-shipment-btn');
+        const cancelShipmentBtn = document.getElementById('clear-shipment-btn')
+        const shipmentForm = document.getElementById('add-shipment-form');
+        const displayData = document.getElementById('current-shipment-items')
+        let newShipment = { items: {} };
+        addItemBtn.onclick = (e) => {
+          e.preventDefault()
+          const itemId = document.getElementById('ship-item-id').value
+          const itemQty = document.getElementById('ship-item-qty').value
+          newShipment.items[itemId] = (newShipment[itemId] || 0) + parseInt(itemQty);
+          displayData.innerHTML += `<tr><td>${itemId}</td><td>${itemQty}</td></tr>`
+        }
+        cancelShipmentBtn.onclick = (e) => {
+          e.preventDefault()
+          newShipment = { items: {} }
+          displayData.innerHTML = ''
+        }
+        shipmentForm.onsubmit = (e) => {
+          e.preventDefault();
+          const destination = document.getElementById('shipment-destination').value
+          const custname = document.getElementById('customer-name').value
+          newShipment = { ...newShipment, destination, custname }
+          console.log({ newShipment })
+          fetch('/api/shipments/ship', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newShipment)
+          })
+          newShipment = undefined;
+          displayData.innerHTML = ''
+        }
+
         const shipmentsURL = 'http://localhost:3000/api/shipments'
         const fetchShipmentData = async (url) => {
           const response = await fetch(url)
@@ -155,6 +200,7 @@
             rowHTML += '<td>' + row.destination + '</td>'
             rowHTML += '<td>' + row.custname + '</td>'
             rowHTML += '<td>' + JSON.stringify(row.items, null, 2) + '</td>'
+            rowHTML += '<td>' + new Date(row.created).toLocaleString() + '</td>'
             rowHTML += '</tr>'
             table.innerHTML += rowHTML;
           })
