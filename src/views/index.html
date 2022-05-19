@@ -20,11 +20,17 @@
       font-weight: bold;
       border-bottom: 2px solid darkgray;
     }
+
+    button {
+      padding: .5rem 1rem;
+      border-radius: 15px;
+    }
   </style>
 </head>
 
 <body>
   <h1>Night Moves Inventory System</h1>
+  <!-- CREATE ITEM -->
   <section id="create-item">
     <h2>Create New Item in Inventory</h2>
     <form action="/api/inventory/create" method="POST">
@@ -36,7 +42,7 @@
         <option value="Tulsa">Tulsa, OK</option>
         <option value="Chicago">Chicago, IL</option>
         <option value="Los Angeles">Los Angeles, CA</option>
-        <option value="Kalamazo">Kalamazoo, MI</option>
+        <option value="Kalamazoo">Kalamazoo, MI</option>
         <option value="Greenville">Greenville, NC</option>
       </select>
       <input type="hidden" name="createform" value="true">
@@ -46,36 +52,11 @@
         Fields: 'name:string', 'qty:int', 'shortdesc:string', 'longdesc:string', 'city:string'
       </i></p>
   </section>
-  <section id="update-item">
-    <h2>Update an Item</h2>
-    <form action="/api/inventory/update" , method="POST">
-      <input type="number" name="id" placeholder="item id">
-      <input type="text" name="name" placeholder="item name">
-      <input type="number" name="qty" placeholder="qty">
-      <input type="text" name="shortdesc" placeholder="short description">
-      <input type="text" name="longdesc" placeholder="long description">
-      <select name="city">
-        <option value="Tulsa">Tulsa, OK</option>
-        <option value="Chicago">Chicago, IL</option>
-        <option value="Los Angeles">Los Angeles, CA</option>
-        <option value="Kalamazo">Kalamazoo, MI</option>
-        <option value="Greenville">Greenville, NC</option>
-      </select>
-      <button type="submit">Update Item</button>
-    </form>
-    <p><i>API USAGE: PATCH http://[host:port]/api/inventory/update <br />
-        Fields: 'id:int(required)', 'name:string', 'qty:int', 'shortdesc:string', 'longdesc:string',
-        'city:string'
-      </i></p>
-  </section>
-  <section id="delete-item">
-    <h2>Delete Item</h2>
-    <form action="/api/inventory/delete" method="POST">
-      <input type="number" placeholder="item id" name="id">
-      <button type="submit">Delete Item</button>
-    </form>
-    <p><i>API USAGE: DELETE http://[host:port]/api/inventory/delete/:id</i></p>
-  </section>
+  <!-- END CREATE ITEM -->
+
+  <hr>
+
+  <!-- CURRENT INVENTORY LISTING -->
   <section id="current-inventory">
     <h2>Current Inventory</h2>
     <p><i>API USAGE: <br />GET http://[host:port]/api/inventory/ - returns all items <br /> GET
@@ -117,6 +98,51 @@
       fetchData(inventoryURL)
     </script>
   </section>
+  <!-- END CURRENT INVENTORY LISTING -->
+
+  <hr>
+
+  <!-- UPDATE ITEM -->
+  <section id="update-item">
+    <h2>Update an Item</h2>
+    <form action="/api/inventory/update" , method="POST">
+      <input type="number" name="id" placeholder="item id">
+      <input type="text" name="name" placeholder="item name">
+      <input type="number" name="qty" placeholder="qty">
+      <input type="text" name="shortdesc" placeholder="short description">
+      <input type="text" name="longdesc" placeholder="long description">
+      <select name="city">
+        <option value="Tulsa">Tulsa, OK</option>
+        <option value="Chicago">Chicago, IL</option>
+        <option value="Los Angeles">Los Angeles, CA</option>
+        <option value="Kalamazoo">Kalamazoo, MI</option>
+        <option value="Greenville">Greenville, NC</option>
+      </select>
+      <button type="submit">Update Item</button>
+    </form>
+    <p><i>API USAGE: PATCH http://[host:port]/api/inventory/update <br />
+        Fields: 'id:int(required)', 'name:string', 'qty:int', 'shortdesc:string', 'longdesc:string',
+        'city:string'
+      </i></p>
+  </section>
+  <!-- END UPDATE ITEM -->
+
+  <hr>
+
+  <!-- DELETE ITEM -->
+  <section id="delete-item">
+    <h2>Delete Item</h2>
+    <form action="/api/inventory/delete" method="POST">
+      <input type="number" placeholder="item id" name="id">
+      <button type="submit">Delete Item</button>
+    </form>
+    <p><i>API USAGE: DELETE http://[host:port]/api/inventory/delete/:id</i></p>
+  </section>
+  <!-- END DELETE ITEM -->
+
+  <hr>
+
+  <!-- CREATE SHIPMENT -->
   <section id="create-shipment">
     <h2>Create New Shipment</h2>
     <p><i>API USAGE: <br />POST http://[host:port]/api/shipments/ship <br />
@@ -126,11 +152,10 @@
       <input type="text" name="destination" placeholder="destination" id='shipment-destination'>
       <input type="text" name="custname" placeholder="Customer Name" id='customer-name'>
       <input type="hidden" name="shipform">
-      <h3>Item:Qty to Ship</h3>
-      <input type="number" name="itemid" id="ship-item-id" placeholder="id">:
-      <input type="number" name="itemqty" id="ship-item-qty" placeholder="qty">
       <label for="itemid">Item:</label>
+      <input type="number" name="itemid" id="ship-item-id" placeholder="id">:
       <label for="itemqty">Qty:</label>
+      <input type="number" name="itemqty" id="ship-item-qty" placeholder="qty">
       <button type="button" id="add-to-shipment-btn">Add Item</button>
     </form>
     <table>
@@ -140,8 +165,13 @@
       </thead>
       <tbody id="current-shipment-items"></tbody>
     </table>
-    <button type="submit" form="add-shipment-form">Complete Shipment</button>
-    <button type="button" id="clear-shipment-btn">Clear Shipment</button>
+    <button type="submit" form="add-shipment-form" style="background-color:green;">Ship It!</button>
+    <button type="button" id="clear-shipment-btn" style="background-color: red">Cancel Shipment</button>
+    <!-- END CREATE SHIPMENT -->
+
+    <hr>
+
+    <!-- LIST CURRENT SHIPMENTS -->
     <section id="current-shipments">
       <h2>Scheduled Shipments</h2>
       <table>
@@ -180,6 +210,7 @@
         }
         fetchShipmentData(shipmentsURL)
 
+        // SHIPMENT HANDLERS
         let newShipment = { items: {} };
 
         addItemBtn.onclick = (e) => {
@@ -213,8 +244,11 @@
           newShipment = undefined;
           displayData.innerHTML = ''
         }
-
       </script>
+
+      <hr>
+
+      <!-- DELETE SHIPMENT -->
       <section id="delete-shipment">
         <h2>Cancel Shipment</h2>
         <form action="/api/shipments/delete" method="POST">
@@ -224,6 +258,8 @@
         </form>
         <p><i>API USAGE: DELETE http://[host:port]/api/shipments/delete/:id</i></p>
       </section>
+      <!-- END DELETE SHIPMENT -->
+
 </body>
 
 </html>

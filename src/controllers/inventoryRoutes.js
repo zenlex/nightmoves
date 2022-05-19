@@ -1,8 +1,10 @@
-import Router from "express-promise-router";
-import itemService from '../services/itemService.js';
 import getWeather from "../services/weatherService.js";
+import itemService from '../services/itemService.js';
+import Router from "express-promise-router";
 
 const router = new Router();
+
+// GET ALL ITEMS
 router.get('/', async (req, res, next) => {
 	try{
 		const rows = await itemService.getAllItems();
@@ -22,6 +24,7 @@ router.get('/', async (req, res, next) => {
 	}
 });
 
+// GET SINGLE ITEM BY ID
 router.get('/:id', async (req, res, next) => {
 	const {id} = req.params;
 	try{
@@ -32,6 +35,7 @@ router.get('/:id', async (req, res, next) => {
 	}
 });
 
+// CREATE NEW ITEM
 router.post('/create', async (req, res, next) => {
 	try{
 		const newItem = await itemService.createItem(req.body);
@@ -45,7 +49,7 @@ router.post('/create', async (req, res, next) => {
 	}
 });
 
-//API Call Update Item
+// UPDATE ITEM VIA API
 router.patch('/update', async (req, res, next) => {
 	try{
 		const updatedRow = await itemService.updateItem(req.body);
@@ -55,7 +59,7 @@ router.patch('/update', async (req, res, next) => {
 	}
 });
 
-//HTML Form Update Item
+// UPDATE ITEM VIA FORM
 router.post('/update', async (req, res, next) => {
 	try{
 		await itemService.updateItem(req.body);
@@ -65,7 +69,7 @@ router.post('/update', async (req, res, next) => {
 	}
 });
 
-//API Delete Item
+// DELETE ITEM VIA API
 router.delete('/delete/:id', async (req, res, next) => {
 	try{
 		const {id} = req.params;
@@ -76,7 +80,7 @@ router.delete('/delete/:id', async (req, res, next) => {
 	}
 });
 
-//FORM Delete Item
+// DELETE ITEM VIA FORM
 router.post('/delete', async (req, res, next) => {
 	try{
 		const {id} = req.body;

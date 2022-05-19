@@ -1,9 +1,9 @@
 import db from "../db/index.js";
-import {SHIP_ALL_COLUMNS, SHIP_COLUMNS_NOID, SHIP_TABLE_NAME} from "../constants.js";
 import itemService from "./itemService.js";
+import {SHIP_ALL_COLUMNS, SHIP_COLUMNS_NOID, SHIP_TABLE_NAME} from "../constants.js";
 
 export async function createShipment({destination, custname, items}){
-	//remove stock from inventory
+	// remove stock from inventory
 	for(const idstring in items){
 		const id = parseInt(idstring);
 		const stock = await itemService.getItem(id);
@@ -12,6 +12,8 @@ export async function createShipment({destination, custname, items}){
 		const newQty = currQty - items[id];
 		await itemService.updateItem({id, qty:newQty});
 	}
+
+	// create shipment entry
 	const qtext = `INSERT INTO ${SHIP_TABLE_NAME} (${SHIP_COLUMNS_NOID}) VALUES ($1, $2, $3, $4) RETURNING ${SHIP_ALL_COLUMNS}`;
 	const timestamp = new Date();
 	const values = [destination, custname, items, timestamp];

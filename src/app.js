@@ -5,6 +5,9 @@ import path from 'path';
 import {fileURLToPath} from 'url';
 import serveFavicon from 'serve-favicon';
 import cors from 'cors';
+import { initConfig } from './utils.js';
+
+initConfig();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,6 +21,10 @@ app.use(serveFavicon(path.join(__dirname, '..', 'public', 'favicon.ico')));
 mountRoutes(app);
 app.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, 'views', 'index.html'));
+});
+
+app.use((req, res) => {
+	res.status(404).send('Route Not Found');
 });
 
 app.use((err, req, res) => {

@@ -1,10 +1,8 @@
-// import dotenv from 'dotenv';
-import process from 'node:process';
 import app from './app.js';
+import process from 'node:process';
+import { initConfig } from './utils.js';
 
-if (process.env.NODE_ENV !== 'production') {
-	// dotenv.config();
-}
+initConfig();
 
 const PORT = process.env.PORT || 3000;
 

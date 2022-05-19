@@ -3,9 +3,9 @@ import { INV_TABLE_NAME, INV_ALL_COLUMNS, INV_COLUMNS_NOID } from "../constants.
 
 export async function updateItem(reqBody){
 	const {id} = reqBody;
-	//retrieve current item 
-	const originalEntry = await db.query(`SELECT * FROM ${INV_TABLE_NAME} WHERE id=$1;`, [id]);
-	const originalRow = originalEntry.rows[0];
+	// retrieve current item 
+	const {rows: originalRows} = await db.query(`SELECT * FROM ${INV_TABLE_NAME} WHERE id=$1;`, [id]);
+	const originalRow = originalRows[0];
 	let columns = [];
 	let values = [];
 	for(const key of Object.keys(reqBody)){
@@ -26,9 +26,10 @@ export async function updateItem(reqBody){
   WHERE id=${id}
   RETURNING ${INV_ALL_COLUMNS}
   `;
+  
 	//store and return updated row
-	const {rows} = await db.query(queryText, values);
-	return rows[0];
+	const {rows:newRows} = await db.query(queryText, values);
+	return newRows[0];
 }
 
 export async function deleteItem(id){

@@ -1,7 +1,8 @@
 import pg from 'pg';
-import dotenv from 'dotenv';
 import process from 'node:process';
-dotenv.config();
+import { initConfig } from '../utils.js';
+
+initConfig();
 
 const connectionString = process.env.PG_CONNECTION_URL;
 

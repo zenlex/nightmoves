@@ -1,8 +1,0 @@
-POST http://localhost:3000/api/shipments/ship
-Content-Type: application/json
-
-{
-  "destination": "never never land",
-  "custname": "captain hook",
-  "items": {"9": 1}
-}

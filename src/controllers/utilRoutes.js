@@ -7,7 +7,7 @@ const router = new Router();
 router.get('/dbtest', async (req, res, next) => {
 	console.log('db test query requested');
 	try{
-		const { rows } = await db.query('SELECT * from tester;');
+		const { rows } = await db.query('SELECT NOW()');
 		console.log({rows});
 		res.send(rows);
 
