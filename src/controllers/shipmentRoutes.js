@@ -30,7 +30,7 @@ router.post('/ship', async(req,res,next) => {
 });
 
 // DELETE SHIPMENT VIA API
-router.delete('/:id', async(req, res, next) => {
+router.delete('/delete/:id', async(req, res, next) => {
 	try{
 		const {id} = req.params;
 		const deleted = await shipService.deleteShipment(id);

@@ -33,8 +33,42 @@ For this project I chose an Express server with PostgreSQL for the database. The
   * This project is currently deployed live on replit which does not require configuring your own Postgres database instance / credentials.
 
 ### Usage
-  TODO: Usage
+Local Development:
+Server provides a simple webform UI for CRUD operations via `index.html` at home route
+
+#### Scripts
+- `npm run dev` will use `nodemon` to run the server in watch mode. There is not currently hot-reloading for browser so manual refresh is required for UI. Env variables will be loaded from .env file. (See `sample.env` for necessary config)
+
+-`npm start` will launch server in production mode. This disables debug logging and relies on platform set environment variables.
 ### API
+#### Utility Endpoints
+- `/utils/ping` returns 'Pong' 
+- `/utils/dbtest` verifies connection to DB and returns current timestamp
+
+#### Inventory Endpoints
+- `GET /api/inventory` returns all items in current inventory
+- `GET /api/inventory/{id}` returns single item matching id
+* `POST /api/inventory/create` creates new item
+  * Fields:
+  - `qty` 
+  - `name`
+  - `shortdesc`
+  - `longdesc`
+  - `city`
+
+- `PATCH /api/inventory/update` updates item with any non blank fields
+- `DELETE /api/inventory/delete/{id}` deletes item with matching {id}
+
+#### Shipment Endpoints
+- `GET /api/shipments/` returns all current shipments 
+- `GET /api/shipments/{id}` returns single shipment matching id
+* `POST /api/shipments/create` creates new shipment
+  * Fields:
+  - `dest` - shipping destination
+  - `custname` - customer name
+  - `items` - a JSON object of key/value pairs where key is the item id and value is the quantity
+
+- `DELETE /api/shipments/delete/{id}` deletes item with matching {id}
 
 ### Contributing
 Not accepting PRs at this time. Contact erich@zenlex.dev with questions. 
