@@ -8,17 +8,10 @@ A toy CRUD app for my application to the Shopify Internship Program
 
 
 ## Table of Contents
-
-  - [Short Description](#short-description)
-  - [Long Description](#long-description)
-  - [Table of Contents](#table-of-contents-1)
   - [Background](#background)
   - [Install](#install)
   - [Usage](#usage)
-  - [Extra Sections](#extra-sections)
   - [API](#api)
-  - [Maintainers](#maintainers)
-  - [Thanks](#thanks)
   - [Contributing](#contributing)
   - [License](#license)
 
