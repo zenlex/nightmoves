@@ -76,7 +76,7 @@
       </tbody>
     </table>
     <script>
-      const inventoryURL = 'http://localhost:3000/api/inventory/'
+      const inventoryURL = `/api/inventory/`
       const fetchData = async (url) => {
         const response = await fetch(url)
         const data = await response.json();
@@ -190,7 +190,7 @@
         const cancelShipmentBtn = document.getElementById('clear-shipment-btn')
         const shipmentForm = document.getElementById('add-shipment-form');
         const displayData = document.getElementById('current-shipment-items')
-        const shipmentsURL = 'http://localhost:3000/api/shipments'
+        const shipmentsURL = `/api/shipments`
         const fetchShipmentData = async (url) => {
           const response = await fetch(url)
           const data = await response.json();
